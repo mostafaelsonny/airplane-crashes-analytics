@@ -34,8 +34,13 @@ if (-not (Test-Path ".git")) {
 git add -A
 git commit -m "chore: initial project scaffold and architecture governance" 2>$null
 
-Write-Host ">>> Creating repository '$RepoName' on GitHub ($Visibility)..." -ForegroundColor Cyan
-gh repo create $RepoName "--$Visibility" --source=. --remote=origin --push
+Write-Host ">>> Checking/Creating repository '$RepoName' on GitHub ($Visibility)..." -ForegroundColor Cyan
+try {
+    gh repo view "$RepoName" 2>$null
+    Write-Host "Repository already exists on GitHub." -ForegroundColor Green
+} catch {
+    gh repo create $RepoName "--$Visibility" --source=. --remote=origin --push
+}
 
 Write-Host ">>> Pushing and configuring develop branch..." -ForegroundColor Cyan
 git checkout -B develop
