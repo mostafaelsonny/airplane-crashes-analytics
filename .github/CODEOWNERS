@@ -1,0 +1,40 @@
+# ==============================================================================
+# CODEOWNERS - Real-Time Airplane Crashes Analytics
+# ==============================================================================
+# قائد الفريق (Mostafa) هو المالك الأساسي والمراجع الإلزامي الوحيد لكافة أجزاء المشروع
+# لا يتم دمج أي PR إلا بعد مراجعة وموافقة @mostafaelsonny
+#
+# عند إضافة حسابات باقي أعضاء الفريق، يتم استبدال الـ placeholders بالـ usernames الحقيقية.
+
+# المالك الافتراضي لكافة الملفات والمجلدات
+*                                               @mostafaelsonny
+
+# وثائق المعمارية وقرارات التصميم
+/docs/architecture/                             @mostafaelsonny
+/.github/                                       @mostafaelsonny
+
+# العقد الموحد للبيانات (مشترك بين منذر وروني ومصطفى)
+/docs/data/data_contract.md                     @mostafaelsonny
+
+# موديول البنية التحتية وكافكا (روان)
+/infrastructure/                                @mostafaelsonny
+/docs/infrastructure/                           @mostafaelsonny
+
+# موديول توليد واستخراج البيانات التاريخية (روني)
+/producer/                                      @mostafaelsonny
+/docs/data/                                     @mostafaelsonny
+
+# موديول استخراج وتحويل البيانات Apache NiFi (إبراهيم)
+/nifi/                                          @mostafaelsonny
+/docs/nifi/                                     @mostafaelsonny
+
+# موديول معالجة البيانات اللحظية Apache Spark Structured Streaming (فيبرونيا - الدور المعتمد)
+/spark/                                         @mostafaelsonny
+/docs/spark/                                    @mostafaelsonny
+
+# موديول قواعد البيانات PostgreSQL والـ Schema والـ Upsert (منذر - الدور المعتمد)
+/database/                                      @mostafaelsonny
+/docs/database/                                 @mostafaelsonny
+
+# اختبارات التكامل الشاملة (قائد الفريق)
+/tests/integration/                             @mostafaelsonny

@@ -1,0 +1,52 @@
+name: "Task / مهمة من Trello"
+description: "توثيق مهمة تطويرية تابعة لسبرنت معين في المشروع"
+title: "[Task]: "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 📋 تسجيل مهمة جديدة
+        تأكد من مطابقة هذه المهمة للوحة Trello وخطة السبرنت.
+  - type: input
+    id: trello-card
+    attributes:
+      label: رابط كارت Trello
+      placeholder: "https://trello.com/c/..."
+    validations:
+      required: true
+  - type: dropdown
+    id: sprint
+    attributes:
+      label: السبرنت المستهدف
+      options:
+        - "Sprint 1 — Foundation & PoC"
+        - "Sprint 2 — Analytics & Processing"
+        - "Sprint 3 — Integration & Optimization"
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: المكون المعماري
+      options:
+        - "Producer (Python & NTSB Dataset)"
+        - "Infrastructure & Kafka"
+        - "Apache NiFi (ETL)"
+        - "Apache Spark Structured Streaming"
+        - "PostgreSQL Database"
+        - "Architecture & Docs"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: وصف المهمة والمطلوب تنفيذه
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: معايير القبول (Acceptance Criteria)
+    validations:
+      required: true

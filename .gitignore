@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments & Virtualenvs
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+*.env.local
+
+# JetBrains / VSCode
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Big Data & Data files
+*.accdb
+*.mdb
+*.zip
+*.tar.gz
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Spark Checkpoints & Warehouses
+spark-warehouse/
+metastore_db/
+derby.log
+checkpoint/
+checkpoints/
+*.checkpoint
+
+# PostgreSQL & Docker volumes
+postgres-data/
+nifi-data/
+kafka-data/
+zookeeper-data/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Generated
+.DS_Store
+Thumbs.db
+
+# Temporary cloned repos
+temp_*/

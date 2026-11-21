@@ -1,0 +1,46 @@
+name: "Bug Report / إبلاغ عن مشكلة"
+description: "إبلاغ عن عطل، خطأ في البيانات، أو فشل في الاتصال بين المكونات"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 🐛 الإبلاغ عن مشكلة برمجية أو شبكية
+  - type: dropdown
+    id: component
+    attributes:
+      label: المكون المتأثر بالمشكلة
+      options:
+        - "Producer / Data Reader"
+        - "Kafka Brokers / Topics"
+        - "NiFi Flow / Processors"
+        - "Spark Streaming / foreachBatch"
+        - "PostgreSQL / Schema / Upsert"
+        - "Docker Compose / Networking"
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: وصف الخطأ
+      placeholder: "ما الذي حدث؟ وما هو السلوك المتوقع؟"
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: خطوات إعادة إحداث الخطأ (Reproduction Steps)
+      placeholder: |
+        1. تشغيل docker compose up
+        2. تشغيل producer.py
+        3. ملاحظة ظهور خطأ ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs-and-errors
+    attributes:
+      label: سجلات الخطأ (Logs / Stack Trace)
+      render: shell
+    validations:
+      required: true

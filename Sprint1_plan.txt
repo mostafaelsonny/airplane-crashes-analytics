@@ -1,0 +1,1022 @@
+Sprint 1 — Foundation & End-to-End Proof of Concept
+1. Sprint Overview
+Sprint Goal
+Establish the project foundation, prepare the development environment, inspect and define the historical aviation accident dataset, and implement a working End-to-End Proof of Concept connecting Python, Kafka, Apache NiFi, Apache Spark Structured Streaming, and PostgreSQL.
+
+ببساطة، هدفنا إننا نثبت إن كل المكونات الأساسية بتتكلم مع بعضها وبتنقل البيانات بشكل صحيح.
+Sprint Duration
+Item	Value
+Duration	6 Working Days
+Daily Availability	3–4 Hours
+Total Hours / Member	18–24 Hours
+Team Size	6
+Total Team Capacity	108–144 Hours
+
+
+Sprint Scope
+الحاجات اللي لازم ننجزها:
+1. تحديد مصدر البيانات وتنزيل الـ Dataset.
+2. فحص البيانات وفهم Structure بتاعتها.
+3. اعتماد Data Contract موحد.
+4. تجهيز Docker Environment.
+5. تشغيل Kafka وإنشاء Topics.
+6. إنشاء Python Producer يرسل Historical Records.
+7. إنشاء NiFi Flow يقرأ البيانات وينفذ ETL مبدئي.
+8. نشر البيانات المعالجة إلى Kafka.
+9. إنشاء Spark Structured Streaming Application.
+10. قراءة البيانات من Kafka باستخدام Spark.
+11. تخزين البيانات في PostgreSQL باستخدام foreachBatch.
+12. تنفيذ End-to-End Integration Test.
+13. تجهيز Documentation أساسية للمكونات.
+Out of Scope
+الحاجات دي مش مطلوبة في Sprint 1:
+- تنفيذ جميع التحليلات النهائية.
+- بناء Dashboard كاملة.
+- تنفيذ Geographic Analytics.
+- بناء Advanced Analytics.
+- بناء Authentication أو User Management.
+- تحسين الأداء على نطاق Production.
+- تنفيذ Monitoring System متكامل.
+- التعامل مع جميع أنواع أخطاء البيانات المحتملة بشكل نهائي.
+الهدف هو إثبات الـ Architecture، مش بناء المنتج النهائي.
+2. Architecture المعتمدة في Sprint 1
+دي الـ Architecture اللي هنعتبرها المرجع أثناء التنفيذ:
+                  NTSB Historical Dataset
+                            |
+                            v
+                    Python Producer
+                            |
+                            v
+                       Kafka Broker
+                            |
+                            v
+                      crashes.raw
+                            |
+                            v
+                        Apache NiFi
+                            |
+                    ETL / Validation
+                            |
+                            v
+                    crashes.cleaned
+                            |
+                            v
+                 Spark Structured Streaming
+                            |
+                            v
+                       foreachBatch
+                            |
+                            v
+                       PostgreSQL
+
+لاحظ إننا مش هنضيف Streamlit في الـ End-to-End PoC الخاص بـ Sprint 1؛ لأن Dashboard مش من الـ Critical Deliverables في المرحلة دي.
+
+هنجهز الـ Database بحيث تكون قابلة للاستخدام في Sprint 2، وهنبدأ تنفيذ التحليلات والـ Dashboard وقتها.
+نقطة مهمة بخصوص Data Source
+الـ NTSB بتوفر Aviation Accident Dataset رسميًا، والبيانات متاحة في ملفات Microsoft Access، وتشمل بيانات حوادث الطيران التاريخية.
+
+الملف الأساسي الحالي avall.zip يغطي بيانات 2008 حتى الوقت الحالي، وهناك ملفات تاريخية للفترات السابقة. والـ Dataset بتتحدث دوريًا. data.ntsb.gov
+
+المصادر الرسمية:
+- NTSB Aviation Data Download Directory
+- NTSB Accident Data Documentation
+لكن فيه قرار تقني لازم يتنفذ في Day 1:
+
+ملفات NTSB مش بالضرورة CSV واحد بسيط؛ هي قواعد بيانات Access تحتوي على جداول وعلاقات. لذلك أول مهمة لمسؤول البيانات هي فحص الـ Schema وتحديد الجداول والحقول اللازمة.
+
+مش هنفترض إن كل البيانات موجودة في Table واحدة.
+3. Team Responsibilities
+ده التوزيع اللي هنعتمده في التخطيط:
+Member	Role	Main Responsibility
+Mostafa	Team Leader	Architecture, Review, Integration, Testing
+Rony	Data Engineering	NTSB Dataset + Python Producer
+Rovan	Infrastructure Engineer	Docker + Kafka
+Ebrahim	ETL Engineer	Apache NiFi
+Monzer	Processing Engineer	Apache Spark Structured Streaming
+Febronia	Database Engineer	PostgreSQL + Database Schema + Documentation
+
+
+ليه التوزيع ده؟
+Rony: مسؤول عن مصدر البيانات والـ Producer؛ لأن ده أول جزء في الـ Pipeline، ولازم نضمن إن البيانات اللي بتدخل النظام سليمة ومفهومة.
+
+Rovan: مسؤول عن Infrastructure وKafka؛ لأن كل المكونات تقريبًا هتعتمد على البيئة دي، فلازم تجهيزها بدري.
+
+Ebrahim: مسؤول عن NiFi؛ لأنه هيستقبل البيانات ويحولها ويرسلها للمرحلة التالية.
+
+Monzer: مسؤول عن Spark؛ لأنه هيستقبل البيانات بعد الـ ETL ويجهز الـ Streaming Processing.
+
+Febronia: مسؤولة عن PostgreSQL؛ لأننا محتاجين Database Schema واضح ومتفق عليه قبل التكامل مع Spark.
+
+Mostafa: مسؤول عن ضمان إن كل الأجزاء دي بتشتغل كنظام واحد، مش مجرد Components منفصلة كل واحد بيقول إن شغله شغال.
+4. Shared Project Structure
+قبل بداية التنفيذ، لازم يكون عندنا Repository Structure موحد.
+
+الاقتراح:
+airplane-crashes-analytics/
+│
+├── docs/
+│   ├── architecture/
+│   │   └── architecture.md
+│   │
+│   ├── data/
+│   │   ├── data_dictionary.md
+│   │   └── data_contract.md
+│   │
+│   ├── infrastructure/
+│   │   └── environment_setup.md
+│   │
+│   ├── nifi/
+│   │   └── nifi_flow.md
+│   │
+│   ├── spark/
+│   │   └── spark_design.md
+│   │
+│   └── database/
+│       └── database_schema.md
+│
+├── producer/
+│   ├── src/
+│   ├── tests/
+│   ├── requirements.txt
+│   └── README.md
+│
+├── nifi/
+│   ├── flows/
+│   └── README.md
+│
+├── spark/
+│   ├── src/
+│   ├── tests/
+│   └── README.md
+│
+├── database/
+│   ├── init/
+│   ├── migrations/
+│   └── README.md
+│
+├── infrastructure/
+│   ├── docker-compose.yml
+│   ├── .env.example
+│   └── README.md
+│
+├── dashboard/
+│
+├── tests/
+│   └── integration/
+│
+├── .gitignore
+└── README.md
+
+مش مطلوب كل Folder يكون فيه Implementation كامل في Sprint 1.
+
+لكن لازم نحدد أماكن الملفات من البداية حتى لا يشتغل كل عضو بطريقة مختلفة.
+Git Workflow
+هنستخدم:
+main
+  |
+  └── develop
+        |
+        ├── feature/data-producer
+        ├── feature/kafka-infrastructure
+        ├── feature/nifi-etl
+        ├── feature/spark-streaming
+        └── feature/postgres-schema
+
+كل عضو يشتغل على Branch منفصل، ويعمل Pull Request على develop.
+
+أنت تراجع الـ PR وتوافق على الـ Merge.
+
+ممنوع أي عضو يشتغل مباشرة على develop أو main.
+5. Sprint 1 — Detailed Daily Execution Plan
+دلوقتي هنقسم الستة أيام، ونوضح المطلوب من كل عضو في كل مرحلة.
+Day 1 — Project Foundation & Data Contract
+الهدف
+تثبيت الأساس المشترك للمشروع، وفهم شكل البيانات، والاتفاق على طريقة انتقالها بين المكونات.
+Rony — Data Source Inspection
+Task: S1-01 — NTSB Dataset Inspection
+
+المطلوب:
+1. الدخول إلى مصدر NTSB الرسمي.
+2. تنزيل Dataset المناسبة.
+3. فك ضغط الملفات.
+4. تحديد طريقة قراءة ملفات Access.
+5. استكشاف أسماء الجداول.
+6. استكشاف الأعمدة الموجودة.
+7. تحديد العلاقات بين الجداول المهمة.
+8. تحديد الحقول المطلوبة للمشروع.
+9. فحص Missing Values.
+10. استخراج Sample من البيانات.
+الحقول التي نحتاج نبحث عن وجود ما يقابلها:
+Field	Purpose
+Event ID	Unique Accident Identifier
+Event Date	Accident Date
+Event Time	Accident Time
+Location	Accident Location
+Country	Country
+Latitude	Geographic Location
+Longitude	Geographic Location
+Aircraft Make	Aircraft Manufacturer
+Aircraft Model	Aircraft Model
+Injury Severity	Accident Severity
+Fatal Injuries	Fatalities
+Serious Injuries	Serious Injuries
+Minor Injuries	Minor Injuries
+Total Injuries	Total Injuries
+
+
+مش لازم كل الحقول تكون موجودة في نفس الجدول، ومش لازم كل حقل يكون متاحًا لكل Record.
+
+Expected Outputs:
+docs/data/
+    data_dictionary.md
+    dataset_inspection.md
+
+dataset_inspection.md لازم يحتوي على:
+- اسم Dataset.
+- رابط المصدر.
+- تاريخ التنزيل.
+- أسماء الجداول المستخدمة.
+- عدد Records في كل جدول مهم.
+- الحقول المختارة.
+- Missing Values.
+- أهم مشاكل البيانات المكتشفة.
+- عينة من Records.
+Tests:
+- التأكد إن الملف اتفتح بنجاح.
+- التأكد إن الجداول المطلوبة قابلة للقراءة.
+- التأكد إن Event ID موجود أو تحديد بديل مناسب.
+- التأكد إن Event Date قابل للاستخراج.
+- التأكد إن بيانات الطائرة والإصابات قابلة للربط بالحادث.
+Rovan — Infrastructure Preparation
+Task: S1-02 — Docker & Kafka Environment
+
+المطلوب:
+1. تجهيز Docker Compose.
+2. تشغيل Kafka.
+3. تجهيز Kafka Broker Configuration.
+4. تحديد Ports.
+5. تجهيز Persistent Volumes.
+6. التأكد إن الخدمات بتشتغل بعد Restart.
+7. اختبار الاتصال من داخل وخارج Containers حسب الحاجة.
+Expected Outputs:
+infrastructure/
+    docker-compose.yml
+    .env.example
+    README.md
+
+Tests:
+- docker compose up -d يشتغل بدون Errors.
+- Kafka Container حالته Running.
+- Kafka Broker يقبل Connections.
+- إنشاء Topic تجريبي.
+- إرسال Message.
+- استقبال Message.
+- Restart للخدمات والتأكد من استقرارها.
+Ebrahim — NiFi Environment Preparation
+Task: S1-03 — NiFi Setup & Basic Flow
+
+المطلوب:
+1. تشغيل NiFi.
+2. الدخول إلى Web Interface.
+3. فهم الـ Process Groups.
+4. إنشاء Process Group باسم Aircraft Accidents ETL.
+5. تجهيز Flow مبدئي.
+6. تجربة استقبال JSON تجريبي.
+7. تجربة Processor لتحويل البيانات.
+8. تجهيز طريقة نشر البيانات إلى Kafka.
+في اليوم الأول مش مطلوب منه بناء الـ Flow النهائي.
+
+Expected Outputs:
+- NiFi يعمل.
+- Process Group موجود.
+- Flow تجريبي.
+- Screenshot أو Documentation للـ Flow.
+- docs/nifi/nifi_flow.md.
+Tests:
+- فتح NiFi UI.
+- تشغيل Processor.
+- تمرير JSON تجريبي.
+- التأكد من انتقال FlowFile بين Processors.
+- التأكد من ظهور الأخطاء بوضوح.
+Monzer — Spark Environment Preparation
+Task: S1-04 — Spark Setup & Streaming PoC
+
+المطلوب:
+1. تجهيز Spark Environment.
+2. تشغيل PySpark.
+3. إنشاء SparkSession.
+4. تجربة قراءة DataFrame.
+5. تجربة قراءة JSON.
+6. تجربة Structured Streaming.
+7. تجهيز Kafka Connector المتوافق مع إصدار Spark المستخدم.
+8. تجربة قراءة Message من Kafka.
+Expected Outputs:
+spark/
+    src/
+    README.md
+    tests/
+
+بالإضافة إلى:
+
+docs/spark/spark_design.md
+
+Tests:
+- SparkSession تعمل.
+- قراءة DataFrame ناجحة.
+- قراءة JSON ناجحة.
+- Spark يقرأ Message من Kafka.
+- Streaming Query تبدأ بدون Errors.
+Febronia — Database Preparation
+Task: S1-05 — PostgreSQL Schema Design
+
+المطلوب:
+1. تشغيل PostgreSQL.
+2. تحديد Database Name.
+3. تصميم جدول الحوادث الأساسي.
+4. تحديد Primary Key.
+5. تحديد Data Types.
+6. تحديد Constraints.
+7. تجهيز SQL Script لإنشاء الجدول.
+8. تجهيز طريقة الاتصال من Spark.
+Expected Outputs:
+database/
+    init/
+        001_create_tables.sql
+    README.md
+
+بالإضافة إلى:
+
+docs/database/database_schema.md
+
+Tests:
+- PostgreSQL تعمل.
+- إنشاء Database.
+- تنفيذ SQL Script.
+- إدخال Record تجريبي.
+- تنفيذ SELECT.
+- تجربة Unique Constraint.
+- التأكد من الاتصال باستخدام Connection String.
+Mostafa — Leadership & Review
+Task: S1-06 — Project Foundation Review
+
+مسؤولياتك في Day 1:
+1. إنشاء أو مراجعة Repository Structure.
+2. مراجعة Docker Compose.
+3. مراجعة Data Source.
+4. التأكد من إن الفريق فاهم الـ Architecture.
+5. متابعة اعتماد Data Contract.
+6. مراجعة Outputs الأعضاء.
+7. التأكد إن مفيش قرارات متعارضة.
+Day 1 Deliverable:
+
+نهاية اليوم لازم نكون عارفين:
+- شكل البيانات الحقيقي.
+- الحقول المتاحة.
+- طريقة تحويل البيانات إلى JSON.
+- شكل الـ Data Contract.
+- الخدمات المطلوبة.
+- طريقة اتصال المكونات ببعض.
+Day 2 — Kafka & Python Producer
+الهدف
+إثبات إننا قادرين نقرأ Historical Records ونرسلها إلى Kafka بطريقة تحاكي Real-Time Streaming.
+Rony — Python Producer
+Task: S1-07 — Historical Data Producer
+
+بعد اعتماد Data Contract، يبدأ Rony في التنفيذ.
+Workflow
+Step 1: Data Extraction
+
+يكتب Script يقرأ البيانات من المصدر المحدد.
+
+المطلوب:
+- قراءة البيانات.
+- اختيار الحقول المطلوبة.
+- ربط الجداول عند الحاجة.
+- تحويلها إلى Structure موحد.
+Step 2: Data Serialization
+
+تحويل كل Record إلى JSON.
+
+مثال توضيحي:
+{
+  "event_id": "ACC-10001",
+  "event_date": "2024-03-15",
+  "event_time": "14:30:00",
+  "country": "United States",
+  "location": "California",
+  "latitude": 34.0522,
+  "longitude": -118.2437,
+  "aircraft_make": "Example",
+  "aircraft_model": "Model X",
+  "fatal_injuries": 1,
+  "serious_injuries": 0,
+  "minor_injuries": 2
+}
+
+ده مثال توضيحي للـ Contract، مش Record حقيقي من NTSB.
+
+Step 3: Producer Implementation
+
+يستخدم Kafka Producer Library لإرسال البيانات.
+
+Step 4: Historical Simulation
+
+بدل إرسال كل Records مرة واحدة، يرسل Records بفواصل زمنية محددة.
+
+مثلاً:
+Record 1 → Send
+Wait 2 Seconds
+
+Record 2 → Send
+Wait 2 Seconds
+
+Record 3 → Send
+Wait 2 Seconds
+
+الـ Interval لازم يكون Configurable.
+
+Step 5: Logging
+
+يسجل:
+- عدد Records المقروءة.
+- عدد Records المرسلة.
+- عدد Records الفاشلة.
+- وقت الإرسال.
+- Event ID.
+Expected Outputs:
+producer/
+    src/
+        producer.py
+        data_reader.py
+        serializer.py
+        simulator.py
+    tests/
+    requirements.txt
+    README.md
+
+مش لازم التقسيم الداخلي يكون مطابق حرفيًا، لكن لازم تكون مسؤوليات الكود واضحة.
+Tests
+1. إرسال Record واحدة.
+2. إرسال 10 Records.
+3. التأكد من وصولهم إلى Kafka.
+4. التأكد من JSON Validity.
+5. التأكد من عدم ضياع Records في الإرسال.
+6. اختبار Simulation Interval.
+7. اختبار توقف Producer وإعادة تشغيله.
+8. اختبار التعامل مع Record غير صالحة.
+Acceptance Criteria:
+- Producer قادر يقرأ Dataset.
+- كل Record تتحول إلى JSON.
+- الرسائل تصل إلى Kafka.
+- Simulation تعمل.
+- عدد الرسائل المرسلة قابل للتحقق.
+Rovan — Kafka Configuration
+Task: S1-08 — Kafka Topics Configuration
+
+إنشاء Topics:
+crashes.raw
+crashes.cleaned
+crashes.dlq
+
+crashes.raw: البيانات القادمة من Producer.
+
+crashes.cleaned: البيانات بعد NiFi ETL.
+
+crashes.dlq: البيانات التي فشلت في المعالجة، في حالة تفعيل مسار الأخطاء خلال Sprint 1.
+
+المطلوب:
+- تحديد Partition Count مبدئي.
+- تحديد Replication Factor حسب بيئة التشغيل المحلية.
+- تحديد Retention.
+- اختبار Producer/Consumer.
+- تجهيز Topic Configuration Documentation.
+في بيئة Local ذات Broker واحد، نستخدم Replication Factor = 1.
+Tests
+- إنشاء Topics.
+- إرسال Messages.
+- استقبال Messages.
+- قراءة الرسائل من بداية الـ Topic.
+- اختبار Consumer Group.
+- التأكد من أن NiFi وSpark يقدروا يوصلوا إلى Kafka من بيئتهم.
+مهم: لازم Rovan ينسق مع Ebrahim وMonzer على Kafka Bootstrap Servers؛ لأن عنوان الاتصال من داخل Docker مختلف عن العنوان المستخدم من Windows Host.
+Mostafa — Review
+- مراجعة Data Contract.
+- مراجعة Producer Output.
+- مراجعة Topics.
+- التأكد إن أسماء الحقول متطابقة.
+- مراجعة Kafka Connectivity.
+Day 2 Deliverable:
+Historical Dataset
+       |
+Python Producer
+       |
+Kafka
+       |
+crashes.raw
+
+Day 3 — Apache NiFi ETL
+الهدف
+استقبال Raw Records من Kafka وتنفيذ ETL مبدئي ونشر Cleaned Records.
+Ebrahim — NiFi ETL Implementation
+Task: S1-09 — Build NiFi ETL Flow
+Workflow
+Step 1: Create Process Group
+
+اسمها:
+
+Aircraft Accidents ETL
+
+Step 2: Consume Kafka
+
+استخدام Processor مناسب مثل:
+
+ConsumeKafka
+
+يقرأ من:
+
+crashes.raw
+
+Step 3: JSON Parsing
+
+التأكد من إن البيانات قابلة للقراءة.
+
+Step 4: Data Validation
+
+التحقق من الحقول الأساسية:
+- event_id
+- event_date
+- country
+التحقق من إن البيانات المطلوبة موجودة وبالنوع الصحيح.
+
+Step 5: Data Transformation
+
+تنفيذ التحويلات الأساسية:
+- إزالة المسافات غير الضرورية.
+- تحويل أنواع البيانات.
+- توحيد Date Format.
+- التعامل مع Null Values.
+- توحيد أسماء الحقول.
+Step 6: Routing
+
+توجيه Records حسب نتيجة التحقق:
+                 ConsumeKafka
+                       |
+                       v
+                 Validate Data
+                   /       \
+                  /         \
+               Valid       Invalid
+                |             |
+                v             v
+          Transform       Error Route
+                |
+                v
+          PublishKafka
+                |
+                v
+          crashes.cleaned
+
+Step 7: Publish to Kafka
+
+استخدام:
+
+PublishKafka
+
+لإرسال البيانات إلى:
+
+crashes.cleaned
+Expected Outputs
+- NiFi Flow قابل للتشغيل.
+- Exported Flow Definition.
+- Documentation.
+- Sample Input/Output.
+- Error Routing Configuration.
+Tests
+1. إرسال JSON صالح.
+2. التأكد من وصوله إلى NiFi.
+3. التأكد من نجاح Validation.
+4. التأكد من تحويل البيانات.
+5. التأكد من وصولها إلى crashes.cleaned.
+6. إرسال JSON غير صالح.
+7. التأكد من عدم نشره باعتباره Cleaned Record.
+8. التأكد من تسجيل الخطأ أو توجيهه لمسار الأخطاء.
+Acceptance Criteria:
+
+NiFi يقرأ Raw Messages، ينفذ ETL، وينشر البيانات الصحيحة إلى Topic منفصل.
+Rony — Producer Improvements
+- معالجة أخطاء الاتصال.
+- إضافة Logging.
+- إضافة Configurable Simulation Speed.
+- مراجعة Serialization.
+- تجهيز Sample Dataset صغيرة للاختبارات.
+Rovan — Infrastructure Support
+- التأكد من اتصال NiFi بـ Kafka.
+- مراجعة Docker Networking.
+- مراجعة Logs.
+- حل مشاكل الاتصال.
+Mostafa — NiFi Review
+مراجعة Flow والتأكد من إن كل مرحلة واضحة.
+
+Day 3 Deliverable:
+Python Producer
+       |
+       v
+crashes.raw
+       |
+       v
+      NiFi
+       |
+       v
+crashes.cleaned
+
+Day 4 — Spark & PostgreSQL
+الهدف
+إثبات إن Spark قادر يستهلك البيانات المعالجة من Kafka ويخزنها في PostgreSQL.
+Monzer — Spark Structured Streaming
+Task: S1-10 — Spark Kafka Consumer
+Workflow
+Step 1: Create SparkSession
+
+إنشاء SparkSession مع Kafka Connector المناسب لإصدار Spark.
+
+Step 2: Read from Kafka
+
+قراءة:
+
+crashes.cleaned
+
+باستخدام Structured Streaming Kafka Source.
+
+Step 3: Extract Message Value
+
+رسائل Kafka بتكون في Structure يحتوي على:
+- key
+- value
+- topic
+- partition
+- offset
+- timestamp
+محتاج يحول value من Binary إلى String، ثم يحوله إلى JSON Structure باستخدام Schema واضح.
+
+Step 4: Define Schema
+
+تعريف Schema للـ JSON، ومتطابق مع Data Contract.
+
+Step 5: Basic Processing
+
+في Sprint 1 المطلوب:
+- Parsing.
+- Type Conversion.
+- Basic Validation.
+- Select Required Columns.
+مش مطلوب تنفيذ التحليلات النهائية.
+
+Step 6: foreachBatch
+
+استخدام:
+
+foreachBatch
+
+لتمرير كل Micro-batch إلى PostgreSQL.
+
+Step 7: Checkpointing
+
+تجهيز Checkpoint Directory لاستعادة حالة Streaming Query بعد إعادة التشغيل.
+
+Expected Outputs:
+spark/
+    src/
+        spark_consumer.py
+        schema.py
+        postgres_writer.py
+    tests/
+    README.md
+
+Tests
+1. SparkSession تبدأ بنجاح.
+2. قراءة Kafka Topic.
+3. Parsing JSON.
+4. التعامل مع Null Values.
+5. استقبال Micro-batch.
+6. تنفيذ foreachBatch.
+7. التأكد من كتابة البيانات في PostgreSQL.
+8. Restart للـ Streaming Application والتأكد من استعادة القراءة وفقًا لإعدادات Checkpoint.
+Febronia — PostgreSQL Implementation
+Task: S1-11 — Database Implementation
+Workflow
+Step 1: Database Setup
+
+إنشاء Database:
+
+airplane_crashes_db
+
+Step 2: Create Main Table
+
+جدول مبدئي:
+
+accidents
+Column	Type	Purpose
+event_id	TEXT	Unique Accident ID
+event_date	DATE	Accident Date
+event_time	TIME	Accident Time
+country	TEXT	Country
+location	TEXT	Location
+latitude	DOUBLE PRECISION	Latitude
+longitude	DOUBLE PRECISION	Longitude
+aircraft_make	TEXT	Aircraft Make
+aircraft_model	TEXT	Aircraft Model
+fatal_injuries	INTEGER	Fatalities
+serious_injuries	INTEGER	Serious Injuries
+minor_injuries	INTEGER	Minor Injuries
+
+
+ده Schema مبدئي، والحقول النهائية لازم تتوافق مع ما أثبته Rony في Dataset Inspection والـ Data Contract.
+
+Step 3: Constraints
+- Primary Key على event_id.
+- Nullability مناسبة لكل حقل.
+- Constraints للقيم العددية غير السالبة عندما تكون البيانات معروفة.
+Step 4: Upsert Preparation
+
+تجهيز طريقة تمنع تكرار الحادث عند إعادة معالجة البيانات.
+
+ممكن نستخدم:
+INSERT INTO accidents (...)
+VALUES (...)
+ON CONFLICT (event_id)
+DO UPDATE SET ...;
+
+Step 5: Connection
+
+تجهيز Connection Configuration ليستخدمها Spark.
+Tests
+- إنشاء الجداول.
+- Insert.
+- Select.
+- Unique Constraint.
+- Upsert.
+- Connection من Spark.
+- التأكد من عدم إنشاء Duplicate Records.
+Expected Outputs:
+database/
+    init/
+        001_create_tables.sql
+    README.md
+
+Mostafa — Integration Review
+في نهاية Day 4 لازم تراجع إن:
+Kafka cleaned
+      |
+      v
+Spark Streaming
+      |
+      v
+foreachBatch
+      |
+      v
+PostgreSQL
+
+شغالة.
+
+مهم جدًا: foreachBatch لازم تكون Idempotent قدر الإمكان. لأن إعادة معالجة نفس Micro-batch ممكن تؤدي لتكرار الكتابة. وجود event_id كـ Unique Key مع Upsert يساعدنا في التعامل مع ده.
+Day 5 — End-to-End Integration
+ده من أهم أيام الـ Sprint.
+الهدف
+تشغيل كل الـ Components مع بعضها.
+
+مش كل عضو يختبر شغله منفصل؛ كل الفريق لازم يتأكد إن النظام كله شغال.
+Integration Workflow
+Step 1 — Infrastructure
+
+Rovan يشغل كل الخدمات.
+
+Step 2 — Database
+
+Febronia تتأكد إن PostgreSQL جاهزة والجداول موجودة.
+
+Step 3 — Spark
+
+Monzer يشغل Spark Streaming Application.
+
+Step 4 — NiFi
+
+Ebrahim يشغل NiFi Flow.
+
+Step 5 — Producer
+
+Rony يشغل Python Producer.
+Expected Flow
+NTSB Dataset
+     |
+     v
+Python Producer
+     |
+     v
+Kafka Raw Topic
+     |
+     v
+NiFi ETL
+     |
+     v
+Kafka Cleaned Topic
+     |
+     v
+Spark Streaming
+     |
+     v
+foreachBatch
+     |
+     v
+PostgreSQL
+
+Mostafa — Integration Owner
+أنت المسؤول عن قيادة الاختبار.
+
+محتاج تتأكد من الآتي:
+Test	Expected Result
+Producer sends records	Messages reach raw topic
+NiFi consumes records	FlowFiles are created
+NiFi validates data	Valid records continue
+NiFi publishes records	Messages reach cleaned topic
+Spark consumes records	Micro-batches are processed
+Spark parses JSON	Records become structured
+foreachBatch executes	Database write succeeds
+PostgreSQL receives records	Rows appear in accidents
+Duplicate handling	Same event_id does not create duplicate rows
+
+
+Integration Documentation
+هنحتاج ملف:
+
+docs/architecture/end_to_end_test.md
+
+يحتوي على:
+- خطوات تشغيل النظام.
+- Test Scenario.
+- Input Sample.
+- Expected Output.
+- Actual Output.
+- عدد Records المرسلة.
+- عدد Records المستلمة.
+- عدد Records المخزنة.
+- المشاكل التي ظهرت.
+- كيفية حلها.
+Day 6 — Final Testing & Sprint Review
+الهدف
+التأكد من إن كل شيء يعمل بصورة مستقرة وتجهيز Sprint 1 Deliverables.
+Testing Checklist
+1. Data Source Testing
+- Dataset قابلة للقراءة.
+- Records قابلة للاستخراج.
+- Data Contract متوافق مع البيانات.
+- الحقول الأساسية متوفرة.
+2. Producer Testing
+- إرسال Records.
+- Simulation تعمل.
+- JSON Valid.
+- Logging واضح.
+- أخطاء الإرسال ظاهرة.
+3. Kafka Testing
+- Topics موجودة.
+- Messages تصل.
+- Consumers يقرؤون.
+- الاتصال من الخدمات المختلفة ناجح.
+4. NiFi Testing
+- ConsumeKafka يعمل.
+- Validation تعمل.
+- Transformation تعمل.
+- PublishKafka يعمل.
+- Invalid Records لا تصل إلى Cleaned Topic.
+5. Spark Testing
+- Kafka Source يعمل.
+- JSON Parsing يعمل.
+- Schema صحيح.
+- Streaming Query تعمل.
+- foreachBatch يعمل.
+- Checkpointing مضبوط.
+6. Database Testing
+- الجداول موجودة.
+- البيانات تصل.
+- Primary Key يعمل.
+- Duplicate Handling يعمل.
+- SQL Queries تعمل.
+7. End-to-End Testing
+- تشغيل النظام كاملًا.
+- إرسال مجموعة Records.
+- تتبعها عبر جميع المراحل.
+- التأكد من وصولها إلى PostgreSQL.
+- مقارنة أعداد Records في المراحل المختلفة.
+Sprint Review
+في نهاية اليوم السادس، لازم نقدر نعمل Demo بالشكل ده:
+1. نشغل Docker Compose.
+2. نعرض Kafka Topics.
+3. نشغل NiFi Flow.
+4. نشغل Spark Application.
+5. نشغل Python Producer.
+6. نعرض Records وهي بتتحرك بين المكونات.
+7. نعرض البيانات داخل PostgreSQL.
+لو ده حصل بنجاح، يبقى Sprint 1 حققت هدفها.
+6. Dependencies بين أعضاء الفريق
+دي نقطة مهمة جدًا في التخطيط؛ لأن التأخير غالبًا مش بيكون بسبب صعوبة الـ Task نفسها، لكن بسبب إن عضو مستني Output من عضو آخر.
+
+الجدول التالي يوضح الاعتماديات:
+Task	Owner	Depends On	Output Needed By
+Dataset Inspection	Rony	NTSB Source	Febronia, Mostafa
+Data Contract	Febronia + Rony + Mostafa	Dataset Inspection	All Members
+Kafka Setup	Rovan	Docker Environment	Rony, Ebrahim, Monzer
+Producer	Rony	Data Contract + Kafka	Ebrahim
+NiFi Flow	Ebrahim	Kafka + Data Contract	Monzer
+Spark Consumer	Monzer	Kafka + Data Contract	Mostafa
+Database Schema	Febronia	Data Contract	Monzer
+Spark DB Writer	Monzer	Database Setup	Mostafa
+Integration	Mostafa	All Components	Entire Team
+
+
+Dependency Rules
+1. Rony لا يعتمد الـ Final JSON Structure قبل اعتماد Data Contract.
+2. Ebrahim لا يعتبر NiFi Flow مكتملًا قبل استلام Sample Messages متوافقة مع Contract.
+3. Monzer يقدر يجهز Spark Consumer باستخدام Test Messages قبل انتهاء NiFi.
+4. Febronia تقدر تبدأ Schema Design بعد اعتماد Contract.
+5. Spark DB Writer لا يعتبر مكتملًا قبل اختبار الاتصال بقاعدة البيانات.
+6. Integration Testing لا يبدأ قبل توفر جميع الـ Components الأساسية.
+7. Documentation Deliverables
+دي الملفات اللي لازم تكون موجودة في نهاية Sprint 1.
+File	Owner	Purpose
+architecture.md	Mostafa	Architecture Overview
+dataset_inspection.md	Rony	Dataset Analysis
+data_dictionary.md	Rony	Dataset Fields
+data_contract.md	Febronia + Rony + Mostafa	Common Data Structure
+environment_setup.md	Rovan	Environment Instructions
+kafka_topics.md	Rovan	Topic Configuration
+nifi_flow.md	Ebrahim	NiFi Flow Documentation
+spark_design.md	Monzer	Spark Implementation
+database_schema.md	Febronia	Database Structure
+end_to_end_test.md	Mostafa	Integration Test Results
+
+
+مش مطلوب Documentation ضخمة؛ المطلوب تكون دقيقة وكافية لعضو آخر يقدر يفهم ويشغل الجزء الخاص بأي عضو.
+8. Definition of Done — Sprint 1
+مش هنعتبر Sprint 1 ناجحة لمجرد إن كل عضو خلص الـ Tasks بتاعته.
+
+لازم نحقق المعايير دي:
+Criteria	Required
+Dataset Inspection	Done
+Data Contract	Approved
+Docker Environment	Running
+Kafka Topics	Created
+Python Producer	Working
+Historical Simulation	Working
+NiFi ETL	Working
+Spark Streaming	Working
+PostgreSQL	Working
+foreachBatch	Working
+End-to-End Integration	Passed
+Documentation	Completed
+GitHub PRs	Reviewed & Merged
+
+
+أهم معيار:
+
+لازم Record واحدة على الأقل تمر فعليًا من أول Python Producer إلى PostgreSQL، من خلال Kafka وNiFi وSpark، بدون تدخل يدوي بين المراحل.
+
+والأفضل نختبر مجموعة Records بدل Record واحدة في اختبار القبول النهائي.
+9. Trello Board — Sprint 1
+أنصحك تعمل List منفصلة لكل مرحلة:
+Backlog
+   |
+   v
+Sprint 1 - To Do
+   |
+   v
+In Progress
+   |
+   v
+In Review
+   |
+   v
+Testing
+   |
+   v
+Done
+
+استخدم Labels لتحديد المسؤولية:
+Label	Member
+Leader / Review	Mostafa
+Data Engineering	Rony
+Infrastructure / Kafka	Rovan
+ETL / NiFi	Ebrahim
+Processing / Spark	Monzer
+Database	Febronia
+
+
+وكل Card لازم تحتوي على:
+- Objective.
+- Detailed Description.
+- Prerequisites.
+- Dependencies.
+- Execution Steps.
+- Expected Outputs.
+- Testing Steps.
+- Acceptance Criteria.
+- Definition of Done.
+- Due Date.

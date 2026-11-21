@@ -1,0 +1,1638 @@
+# REAL-TIME AIRPLANE CRASHES ANALYTICS
+## Project Execution Blueprint — Version 1.0
+
+**Project Category:** Big Data Engineering & Real-Time Analytics  
+**Team Size:** 6 Members  
+**Project Duration:** 3 Weeks  
+**Project Status:** Planning & Architecture  
+**Document Version:** 1.0  
+**Document Type:** Technical & Project Reference Document
+
+---
+
+# 1. Document Purpose
+
+## 1.1 Purpose
+
+This document defines the technical vision, system architecture, implementation scope, technology stack, data management strategy, processing requirements, and engineering standards for the Real-Time Airplane Crashes Analytics project.
+
+It serves as the central reference for all team members throughout the development lifecycle.
+
+Every team member must understand the overall system architecture and the responsibilities of each component before starting implementation.
+
+All implementation decisions should be consistent with the specifications defined in this document.
+
+## 1.2 Project Constraints
+
+The project is developed under the following constraints:
+
+- The team consists of six students.
+- The available implementation period is approximately three weeks.
+- This is the team's first experience developing an integrated Big Data Streaming system.
+- Apache Kafka, Apache NiFi, and Apache Spark are mandatory technologies.
+- A database is mandatory.
+- A dashboard is preferred to demonstrate the analytical results.
+- Additional technologies are allowed when they provide practical value.
+
+## 1.3 Engineering Philosophy
+
+The project follows these principles:
+
+1. Prioritize core functionality over unnecessary complexity.
+2. Implement a complete end-to-end data pipeline.
+3. Prefer simple, maintainable, and understandable solutions.
+4. Validate data before processing and storing it.
+5. Avoid introducing technologies without a clear purpose.
+6. Integrate components early instead of waiting until the final development stage.
+7. Every team member must understand the code and technologies they work with.
+8. Prioritize correctness and demonstrable functionality over feature quantity.
+
+The target is a complete academic implementation with a sound engineering foundation, not a fully production-hardened enterprise platform.
+
+---
+
+# 2. Project Overview
+
+## 2.1 Project Description
+
+Real-Time Airplane Crashes Analytics is a Big Data Streaming application designed to collect, process, analyze, and visualize aviation accident data.
+
+The system uses a distributed data pipeline consisting of:
+
+- Python for data collection.
+- Apache Kafka for data streaming and message distribution.
+- Apache NiFi for data ingestion and ETL.
+- Apache Spark Structured Streaming for real-time processing and analytics.
+- PostgreSQL for persistent storage.
+- Streamlit for analytical visualization.
+
+The system receives aviation accident records from external data sources or historical datasets.
+
+These records are published to Kafka, processed and transformed through NiFi, and then consumed by Spark for analytical operations.
+
+The resulting information is stored in PostgreSQL and presented through an interactive dashboard.
+
+## 2.2 Problem Statement
+
+Aviation accident information is distributed across different data sources and may have inconsistent formats, incomplete fields, and different levels of detail.
+
+Analyzing these records manually makes it difficult to identify trends, compare geographical distributions, and understand accident patterns.
+
+This project addresses the problem by building an integrated data processing system that continuously ingests aviation accident records, standardizes them, performs analytical computations, and provides accessible visual insights.
+
+## 2.3 Main Objectives
+
+The project aims to:
+
+1. Collect aviation accident information from reliable data sources.
+2. Build a streaming pipeline using Apache Kafka.
+3. Perform data cleaning and transformation using Apache NiFi.
+4. Process incoming records using Apache Spark Structured Streaming.
+5. Perform time-based, geographical, and aircraft-related analytics.
+6. Store processed information in a structured database.
+7. Visualize analytical results through an interactive dashboard.
+8. Demonstrate the integration of essential Big Data technologies.
+
+---
+
+# 3. Project Scope
+
+A clearly defined scope is essential because the project has a limited development period.
+
+The implementation is divided into three priority levels.
+
+## 3.1 Core Scope — Mandatory
+
+These features are required for project completion.
+
+### Data Engineering
+- Select and integrate at least one reliable aviation accident dataset.
+- Develop a Python-based data collector.
+- Standardize collected records into a defined data format.
+- Publish raw records to Kafka.
+
+### Kafka
+- Configure Kafka.
+- Create the required topics.
+- Support communication between system components.
+- Ensure that messages can be consumed by downstream applications.
+
+### Apache NiFi
+- Consume raw records from Kafka.
+- Validate incoming records.
+- Perform essential ETL operations.
+- Route invalid records appropriately.
+- Publish transformed records to Kafka.
+
+### Apache Spark
+- Consume transformed records from Kafka.
+- Implement Spark Structured Streaming.
+- Perform analytical operations.
+- Produce aggregated analytical results.
+
+### Database
+- Store processed accident records.
+- Store analytical results.
+- Support queries required by the dashboard.
+
+### Dashboard
+- Display important accident statistics.
+- Visualize temporal and geographical patterns.
+- Present aircraft-related analytics.
+- Display recent accident records.
+
+## 3.2 Important Scope — Quality Improvements
+
+These features should be implemented when the core pipeline is stable:
+
+- Duplicate detection.
+- Data quality validation.
+- Basic error handling.
+- Logging.
+- Basic recovery mechanisms.
+- Database upsert operations.
+- Automated data ingestion.
+- Docker Compose configuration.
+- Basic integration tests.
+
+## 3.3 Optional Scope — Excluded From Initial Implementation
+
+The following features are not required for the initial project version:
+
+- Machine Learning-based accident prediction.
+- Deep Learning.
+- Advanced anomaly detection.
+- Complex geographical clustering.
+- Kubernetes.
+- Enterprise authentication and authorization.
+- Advanced distributed monitoring.
+- Multi-region deployment.
+- Full cloud production deployment.
+- Complex microservices architecture.
+
+These features must not delay the implementation of mandatory components.
+
+---
+
+# 4. System Architecture
+
+## 4.1 High-Level Architecture
+
+The system follows a sequential streaming architecture.
+
+DATA SOURCES
+      |
+      v
+PYTHON DATA COLLECTOR
+      |
+      v
+APACHE KAFKA
+(crashes.raw)
+      |
+      v
+APACHE NIFI
+(Data Validation & ETL)
+      |
+      v
+APACHE KAFKA
+(crashes.cleaned)
+      |
+      v
+APACHE SPARK STRUCTURED STREAMING
+      |
+      v
+ANALYTICAL PROCESSING
+      |
+      v
+POSTGRESQL
+      |
+      v
+STREAMLIT DASHBOARD
+
+The architecture separates data collection, transportation, transformation, processing, storage, and visualization.
+
+Each component has a clearly defined responsibility.
+
+## 4.2 Component Responsibilities
+
+### Data Sources
+
+Provide the original aviation accident information.
+
+### Python Data Collector
+
+Responsible for retrieving records from the selected sources and publishing them to Kafka.
+
+### Apache Kafka
+
+Acts as the central message broker between system components.
+
+### Apache NiFi
+
+Responsible for consuming raw records, validating them, transforming their structure, and publishing clean records.
+
+### Apache Spark
+
+Responsible for continuous data processing and analytical computations.
+
+### PostgreSQL
+
+Provides persistent storage for processed accident records and analytical results.
+
+### Streamlit
+
+Provides a user interface for displaying analytical information.
+
+---
+
+# 5. Data Sources Strategy
+
+## 5.1 Data Source Requirements
+
+The selected data source should provide as many of the following fields as possible:
+
+- Accident identifier.
+- Accident date.
+- Accident time.
+- Country.
+- City.
+- State or region.
+- Latitude.
+- Longitude.
+- Airport.
+- Airline or operator.
+- Aircraft manufacturer.
+- Aircraft model.
+- Aircraft registration.
+- Fatalities.
+- Injuries.
+- Accident description.
+- Investigation information.
+
+Not every source will provide all fields.
+
+Missing optional information must be handled without unnecessarily discarding otherwise valid records.
+
+## 5.2 Recommended Sources
+
+### Primary Source: NTSB
+
+The National Transportation Safety Board provides official aviation accident information, particularly for accidents within its reporting scope.
+
+Official resources:
+
+https://www.ntsb.gov/
+
+https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx
+
+Developer portal:
+
+https://developer.ntsb.gov/
+
+### Additional Historical Datasets
+
+Historical aviation accident datasets may be used to increase the number of records available for analysis.
+
+The selected dataset must have:
+
+- A documented source.
+- A clear licensing or usage policy.
+- A consistent structure.
+- Sufficient information for the required analytics.
+
+### Optional Source: OpenSky Network
+
+OpenSky provides aircraft tracking and flight information.
+
+https://openskynetwork.github.io/opensky-api/
+
+It may be used as an additional source of aviation information.
+
+However, aircraft tracking data must not be treated as an authoritative accident database.
+
+## 5.3 Real-Time Processing Strategy
+
+A major limitation of aviation accident data is that official accident reports are not necessarily published immediately when an accident occurs.
+
+Therefore, the initial implementation will use historical accident records and simulate continuous data ingestion.
+
+A Python Producer will publish records gradually to Kafka.
+
+For example:
+
+- Read the next available accident record.
+- Serialize it into JSON.
+- Publish it to Kafka.
+- Wait for a configurable interval.
+- Publish the next record.
+
+The interval may initially be configured to two seconds for demonstration purposes.
+
+This approach provides a real streaming processing pipeline even though the original records are historical.
+
+**Important distinction:**
+
+The project implements real-time stream processing, while the initial data ingestion may use simulated event generation.
+
+The dashboard and documentation must not claim that the system detects every worldwide aviation accident as it happens.
+
+## 5.4 Data Provenance
+
+Every record should retain information about its origin.
+
+At minimum, the system should preserve:
+
+- Source name.
+- Original source identifier, when available.
+- Collection timestamp.
+- Original event date.
+
+This allows the team to distinguish when an accident occurred from when its information entered the system.
+
+---
+
+# 6. Data Contract and Standardization
+
+## 6.1 Purpose
+
+A Data Contract defines the expected structure and meaning of data exchanged between components.
+
+It is a shared agreement between:
+
+- Python Collector.
+- Kafka.
+- NiFi.
+- Spark.
+- PostgreSQL.
+
+All components must follow the same field names, types, and conventions.
+
+## 6.2 Canonical Accident Record
+
+The following JSON represents the proposed normalized accident record.
+
+It is an initial reference schema. Final source-specific mappings must be approved after inspecting the selected dataset.
+
+```json
+{
+  "crash_id": "SOURCE-2024-001",
+  "source": "NTSB",
+  "source_record_id": "2024-001",
+  "event_date": "2024-05-12T14:30:00Z",
+  "country": "United States",
+  "state": "New York",
+  "city": "New York",
+  "latitude": 40.7128,
+  "longitude": -74.0060,
+  "airport": null,
+  "airline": "Example Airlines",
+  "aircraft_manufacturer": "Boeing",
+  "aircraft_model": "737",
+  "aircraft_registration": null,
+  "fatalities": 2,
+  "injuries": 5,
+  "accident_category": "Accident",
+  "description": null,
+  "collected_at": "2026-11-15T12:00:00Z"
+}
+```
+
+The example values are illustrative and do not represent an actual accident record.
+
+## 6.3 Field Definitions
+
+| Field | Data Type | Required |
+|---|---|---|
+| crash_id | String | Yes |
+| source | String | Yes |
+| source_record_id | String | Preferred |
+| event_date | Timestamp | Yes |
+| country | String | Preferred |
+| state | String | No |
+| city | String | No |
+| latitude | Double | No |
+| longitude | Double | No |
+| airport | String | No |
+| airline | String | No |
+| aircraft_manufacturer | String | No |
+| aircraft_model | String | No |
+| aircraft_registration | String | No |
+| fatalities | Integer | No |
+| injuries | Integer | No |
+| accident_category | String | Preferred |
+| description | String | No |
+| collected_at | Timestamp | Yes |
+
+## 6.4 Data Rules
+
+### Identifier
+
+Every record must have a stable unique identifier.
+
+If the source provides an identifier, it should be preserved.
+
+Otherwise, a deterministic identifier must be generated using source-specific identifying information.
+
+A random identifier generated every time the same record is collected is not acceptable.
+
+### Date and Time
+
+All timestamps must use a consistent UTC representation.
+
+The system must distinguish:
+
+- Event Time: When the accident happened.
+- Collection Time: When the record was collected.
+- Processing Time: When the system processed the record.
+
+### Missing Values
+
+Missing values should be represented consistently as null.
+
+The system must not replace unknown values with misleading values such as zero or an empty string when the distinction matters.
+
+For example:
+
+Unknown fatalities are not equivalent to zero fatalities.
+
+### Numeric Fields
+
+Fatalities and injuries must be numeric values when available.
+
+Negative values must be rejected.
+
+### Geographic Coordinates
+
+Latitude must be between -90 and 90.
+
+Longitude must be between -180 and 180.
+
+If only one coordinate exists, the record must not be treated as a complete geographic location.
+
+### Standardization
+
+Country names, aircraft manufacturers, and other categorical fields should follow consistent naming conventions whenever possible.
+
+---
+
+# 7. Apache Kafka Design
+
+## 7.1 Kafka Responsibilities
+
+Kafka is responsible for transporting records between the different stages of the pipeline.
+
+It provides:
+
+- Message buffering.
+- Producer-consumer communication.
+- Message persistence.
+- Consumer offset management.
+- Decoupling between components.
+
+Kafka is not responsible for the main ETL or analytical calculations.
+
+## 7.2 Proposed Topics
+
+### Topic 1: crashes.raw
+
+Purpose:
+
+Stores original records published by the Python Collector.
+
+Producer:
+Python Data Collector.
+
+Consumer:
+Apache NiFi.
+
+### Topic 2: crashes.cleaned
+
+Purpose:
+
+Stores validated and transformed records.
+
+Producer:
+Apache NiFi.
+
+Consumer:
+Apache Spark Structured Streaming.
+
+### Topic 3: crashes.dlq
+
+Purpose:
+
+Stores records that cannot be processed successfully.
+
+Producer:
+NiFi error-handling flow.
+
+Consumer:
+Optional manual inspection or debugging process.
+
+### Topic 4: crashes.analytics
+
+Purpose:
+
+Optional topic for publishing aggregated analytical events if downstream streaming consumers are introduced.
+
+This topic is not mandatory for the initial implementation.
+
+## 7.3 Message Format
+
+Kafka messages should use JSON for the initial implementation.
+
+Each message represents one accident record.
+
+JSON is selected because it is readable, simple to debug, and supported by the selected technologies.
+
+## 7.4 Kafka Configuration Principles
+
+The initial implementation should use a simple configuration.
+
+Recommended starting point:
+
+- One Kafka broker for local development.
+- One partition per topic initially.
+- Replication factor of one in a single-broker environment.
+- Explicit topic creation.
+- Consistent message serialization.
+- Stable message keys based on crash_id.
+
+The configuration can be expanded if required.
+
+## 7.5 Delivery and Duplicate Handling
+
+Kafka consumers may process a message again under certain failure and restart scenarios.
+
+Therefore, downstream processing must not assume that every record is delivered exactly once.
+
+The system should use:
+
+- Stable record identifiers.
+- Idempotent database operations.
+- Controlled offset management.
+- Appropriate error handling.
+
+The initial implementation does not need a complex exactly-once architecture, but it must avoid silently creating duplicate analytical records.
+
+---
+
+# 8. Apache NiFi — ETL Architecture
+
+## 8.1 NiFi Responsibilities
+
+Apache NiFi manages the transformation flow between raw and normalized accident records.
+
+The ETL process consists of:
+
+- Extract.
+- Transform.
+- Load.
+
+In this project, NiFi consumes data from Kafka, transforms it, and publishes the results back to Kafka.
+
+## 8.2 Proposed NiFi Flow
+
+ConsumeKafka
+      |
+      v
+Parse / Validate JSON
+      |
+      v
+Validate Required Fields
+      |
+      v
+Normalize Data
+      |
+      v
+Convert Data Types
+      |
+      v
+Validate Geographic Coordinates
+      |
+      v
+Route Records
+      |
+      +------------------+
+      |                  |
+      v                  v
+Valid Records       Invalid Records
+      |                  |
+      v                  v
+PublishKafka        crashes.dlq
+
+The actual processor selection depends on the installed NiFi version.
+
+## 8.3 Required ETL Operations
+
+### 1. Data Validation
+
+Check:
+
+- crash_id exists.
+- event_date is valid.
+- Numeric fields have valid types.
+- Geographic coordinates are within valid ranges when present.
+
+### 2. Data Cleaning
+
+Examples:
+
+- Remove unnecessary whitespace.
+- Normalize empty values to null.
+- Remove invalid characters where appropriate.
+- Standardize categorical values.
+
+### 3. Data Transformation
+
+Examples:
+
+- Normalize date formats.
+- Convert numeric strings into numeric values.
+- Standardize field names.
+- Normalize manufacturer names where a reliable mapping exists.
+
+### 4. Error Routing
+
+Records that fail essential validation should be routed to the Dead Letter Queue.
+
+The system should preserve enough information to identify the original record and the reason for rejection.
+
+## 8.4 NiFi Output Contract
+
+Valid records must be published to:
+
+`crashes.cleaned`
+
+Invalid records must be published to:
+
+`crashes.dlq`
+
+The cleaned topic must contain records matching the agreed canonical schema.
+
+---
+
+# 9. Apache Spark Structured Streaming
+
+## 9.1 Spark Responsibilities
+
+Apache Spark performs continuous processing and analytical operations on cleaned accident records.
+
+The project will use PySpark with Spark Structured Streaming.
+
+Structured Streaming is preferred because it provides a structured DataFrame-based interface for stream processing.
+
+## 9.2 Processing Flow
+
+Kafka Source
+      |
+      v
+Read Messages
+      |
+      v
+Extract JSON Payload
+      |
+      v
+Parse Using Defined Schema
+      |
+      v
+Apply Basic Validation
+      |
+      v
+Perform Analytics
+      |
+      v
+Write Results to PostgreSQL
+
+## 9.3 Required Processing Operations
+
+### A. Data Parsing
+
+Spark reads the Kafka message value and converts the JSON payload into a structured DataFrame.
+
+An explicit schema should be used instead of relying on uncontrolled schema inference.
+
+### B. Data Validation
+
+Check the data types and essential fields.
+
+Records that do not satisfy the agreed processing requirements should not silently corrupt analytical results.
+
+### C. Aggregation
+
+Spark should perform aggregations such as:
+
+- Total crashes.
+- Total fatalities.
+- Total injuries.
+- Crashes by country.
+- Crashes by aircraft manufacturer.
+- Crashes by aircraft model.
+- Crashes by accident category.
+
+### D. Time-Based Analytics
+
+The project should implement at least one meaningful time-based streaming aggregation.
+
+Examples:
+
+- Crashes per time window.
+- Crashes by event date.
+- Crashes by month.
+- Crashes by year.
+
+Event Time must be used when analyzing the historical date of accidents.
+
+Processing Time should not replace Event Time in historical trend calculations.
+
+## 9.4 Window Operations
+
+The initial implementation may use:
+
+**Tumbling Windows**
+
+Fixed, non-overlapping time intervals.
+
+Example:
+
+Calculate the number of incoming events every five minutes based on their processing time.
+
+**Sliding Windows**
+
+Overlapping intervals.
+
+Example:
+
+Calculate the number of incoming events during the previous ten minutes, updating the result every two minutes.
+
+These techniques are optional extensions to the core analytical requirements.
+
+For historical accident trends, calendar-based aggregations using event_date are more meaningful than treating the historical accident date as the time of arrival.
+
+## 9.5 Checkpointing
+
+Spark Structured Streaming must use a persistent checkpoint directory.
+
+Checkpointing helps Spark recover its streaming progress after certain failures.
+
+The checkpoint location must remain stable between restarts of the same streaming query.
+
+## 9.6 Database Integration
+
+Spark should write processed records and analytical results to PostgreSQL.
+
+For the initial implementation, foreachBatch can be used to process each micro-batch and perform database writes.
+
+This allows the team to:
+
+- Write records in batches.
+- Apply upsert logic.
+- Execute multiple database operations.
+- Handle database errors at the batch level.
+
+Database writes must be designed to tolerate retries without introducing duplicate records.
+
+---
+
+# 10. Analytics Requirements
+
+The project focuses on descriptive and exploratory analytics.
+
+It does not attempt to establish causal relationships between accident characteristics.
+
+## 10.1 Overview Analytics
+
+Required metrics:
+
+1. Total Accidents.
+2. Total Fatalities.
+3. Total Injuries.
+4. Number of Countries Represented.
+
+Each metric must have a clearly defined calculation.
+
+For example, Total Accidents should count unique valid crash identifiers, not raw Kafka messages.
+
+## 10.2 Temporal Analytics
+
+Analyze accident frequency over time.
+
+Required operations:
+
+- Accidents by year.
+- Accidents by month.
+- Accident trends over time.
+
+Visualization:
+
+Line Chart.
+
+## 10.3 Geographic Analytics
+
+Analyze the distribution of accidents geographically.
+
+Required operations:
+
+- Accidents by country.
+- Top countries by accident count.
+- Geographic distribution when valid coordinates are available.
+
+Visualization:
+
+Bar Chart and optional Interactive Map.
+
+## 10.4 Aircraft Analytics
+
+Analyze accidents according to aircraft characteristics.
+
+Required operations:
+
+- Accidents by manufacturer.
+- Accidents by aircraft model.
+- Most frequently involved aircraft models.
+
+Visualization:
+
+Bar Chart.
+
+## 10.5 Accident Severity Analytics
+
+Analyze accident severity using the available source fields.
+
+Possible classifications:
+
+- Fatal Accident.
+- Non-Fatal Accident.
+- Unknown Severity.
+
+The classification rules must be explicitly documented.
+
+A missing fatalities value must not automatically be classified as zero fatalities.
+
+## 10.6 Analytical Limitations
+
+The number of recorded accidents does not directly measure the safety of an aircraft model, airline, or country.
+
+Accident rates require exposure data, such as:
+
+- Number of flights.
+- Total flight hours.
+- Number of operating aircraft.
+
+These datasets are outside the mandatory scope unless reliable sources become available.
+
+Therefore, the dashboard must present accident counts as descriptive statistics, not as definitive safety rankings.
+
+---
+
+# 11. Database Design
+
+## 11.1 Database Technology
+
+PostgreSQL is selected as the primary database.
+
+It provides:
+
+- Structured relational storage.
+- SQL querying.
+- Aggregation support.
+- Indexing.
+- Transaction management.
+- Compatibility with Python and Spark.
+
+PostGIS is optional and not required for the initial implementation.
+
+## 11.2 Proposed Database Structure
+
+The database should separate individual accident records from analytical results.
+
+### Table: crashes
+
+Stores normalized accident records.
+
+| Column | Type |
+|---|---|
+| crash_id | VARCHAR PRIMARY KEY |
+| source | VARCHAR |
+| source_record_id | VARCHAR |
+| event_date | TIMESTAMPTZ |
+| country | VARCHAR |
+| state | VARCHAR |
+| city | VARCHAR |
+| latitude | DOUBLE PRECISION |
+| longitude | DOUBLE PRECISION |
+| airport | VARCHAR |
+| airline | VARCHAR |
+| aircraft_manufacturer | VARCHAR |
+| aircraft_model | VARCHAR |
+| aircraft_registration | VARCHAR |
+| fatalities | INTEGER |
+| injuries | INTEGER |
+| accident_category | VARCHAR |
+| description | TEXT |
+| collected_at | TIMESTAMPTZ |
+
+The final SQL schema must reflect the actual source fields and validation rules.
+
+### Table: crashes_by_country
+
+Stores country-level accident aggregations.
+
+Suggested fields:
+
+- country.
+- total_crashes.
+- total_fatalities.
+- total_injuries.
+- updated_at.
+
+### Table: crashes_by_aircraft
+
+Stores aircraft-related aggregations.
+
+Suggested fields:
+
+- aircraft_manufacturer.
+- aircraft_model.
+- total_crashes.
+- total_fatalities.
+- updated_at.
+
+### Table: crashes_by_time
+
+Stores time-based aggregations.
+
+Suggested fields:
+
+- aggregation_period.
+- period_start.
+- total_crashes.
+- total_fatalities.
+- updated_at.
+
+These analytical tables are intended to simplify dashboard queries.
+
+## 11.3 Database Integrity
+
+The database should enforce:
+
+- Unique crash identifiers.
+- Appropriate numeric types.
+- Valid primary keys.
+- Appropriate nullability.
+- Relevant indexes.
+
+At minimum, indexes should be considered for:
+
+- event_date.
+- country.
+- aircraft_model.
+
+## 11.4 Duplicate Prevention
+
+Database writes should use an idempotent strategy.
+
+For example, PostgreSQL INSERT ... ON CONFLICT can prevent duplicate crash records.
+
+The system should distinguish a genuinely new accident from an updated version of an existing source record.
+
+---
+
+# 12. Dashboard Requirements
+
+## 12.1 Technology
+
+The dashboard will use:
+
+- Streamlit.
+- Plotly.
+- Pandas.
+- Optional Folium for geographical visualization.
+
+## 12.2 Dashboard Sections
+
+### Section 1: Overview
+
+Display:
+
+- Total Accidents.
+- Total Fatalities.
+- Total Injuries.
+- Countries Represented.
+
+### Section 2: Temporal Analysis
+
+Display:
+
+- Accidents by Year.
+- Accidents by Month.
+- Accident Trends.
+
+### Section 3: Geographic Analysis
+
+Display:
+
+- Top Countries by Accident Count.
+- Geographic Distribution Map when coordinates are available.
+
+### Section 4: Aircraft Analysis
+
+Display:
+
+- Accidents by Manufacturer.
+- Accidents by Aircraft Model.
+- Top Aircraft Models.
+
+### Section 5: Recent Accidents
+
+Display a table containing:
+
+- Accident Date.
+- Country.
+- City.
+- Airline.
+- Aircraft Model.
+- Fatalities.
+
+## 12.3 Dashboard Data Source
+
+The dashboard must read from PostgreSQL.
+
+It must not independently calculate the primary analytical results from the original dataset.
+
+Spark is responsible for analytical processing.
+
+The dashboard is responsible for presentation.
+
+## 12.4 Refresh Strategy
+
+The dashboard should periodically refresh or provide a manual refresh option.
+
+A refresh interval of approximately 10–30 seconds is sufficient for the initial demonstration.
+
+This does not mean the entire pipeline must operate at the same refresh interval.
+
+---
+
+# 13. Data Quality and Error Handling
+
+Data quality is a fundamental requirement.
+
+The pipeline must not assume that all incoming records are correct.
+
+## 13.1 Validation Categories
+
+### Structural Validation
+
+- Required fields exist.
+- JSON is valid.
+- Data types are correct.
+
+### Semantic Validation
+
+- Dates are valid.
+- Numeric values are non-negative.
+- Geographic coordinates are within valid ranges.
+
+### Consistency Validation
+
+- Field names follow the canonical schema.
+- Categorical values are standardized.
+- Identifiers are stable.
+
+## 13.2 Invalid Records
+
+Invalid records should be routed to a separate error path.
+
+The system should retain:
+
+- Original payload.
+- Source information.
+- Processing stage.
+- Error description.
+- Failure timestamp.
+
+## 13.3 Logging
+
+Each component should produce useful logs.
+
+Examples:
+
+- Number of records collected.
+- Number of records published.
+- Number of records processed.
+- Number of invalid records.
+- Database write failures.
+- Processing errors.
+
+The initial implementation does not require an advanced centralized logging platform.
+
+---
+
+# 14. Reliability and Processing Guarantees
+
+The system should demonstrate basic reliability without introducing unnecessary distributed-system complexity.
+
+## 14.1 Kafka
+
+The team must understand:
+
+- Topics.
+- Producers.
+- Consumers.
+- Consumer Groups.
+- Offsets.
+- Message Keys.
+
+## 14.2 NiFi
+
+The team must understand:
+
+- FlowFiles.
+- Processors.
+- Connections.
+- Relationships.
+- Back Pressure.
+- Retry and Failure Relationships.
+
+## 14.3 Spark
+
+The team must understand:
+
+- Structured Streaming.
+- Micro-Batches.
+- DataFrames.
+- Event Time.
+- Processing Time.
+- Checkpointing.
+- Output Modes.
+- foreachBatch.
+
+## 14.4 Idempotency
+
+Idempotency means that processing the same record multiple times should not create multiple logical records in the final database.
+
+The database should use stable identifiers and conflict handling to achieve this.
+
+## 14.5 Recovery
+
+Basic recovery should be tested by restarting individual services and checking whether the pipeline can continue processing.
+
+Full production-grade fault tolerance is outside the initial scope.
+
+---
+
+# 15. Development Environment
+
+## 15.1 Recommended Technologies
+
+| Component | Technology |
+|---|---|
+| Programming Language | Python |
+| Streaming Platform | Apache Kafka |
+| ETL Platform | Apache NiFi |
+| Processing Engine | Apache Spark |
+| Spark API | PySpark |
+| Database | PostgreSQL |
+| Dashboard | Streamlit |
+| Visualization | Plotly |
+| Optional Maps | Folium |
+| Containerization | Docker |
+| Orchestration | Docker Compose |
+| Version Control | Git and GitHub |
+
+## 15.2 Environment Strategy
+
+Docker Compose is recommended to provide a consistent development environment.
+
+The team should use compatible versions of:
+
+- Kafka.
+- NiFi.
+- Spark.
+- PostgreSQL.
+
+Version compatibility must be checked before implementation.
+
+The system should not depend on undocumented local configurations.
+
+## 15.3 Initial Execution Strategy
+
+The preferred approach is local development using Docker Compose.
+
+The team should avoid spending significant time configuring cloud infrastructure unless it becomes necessary for the final demonstration.
+
+---
+
+# 16. Proposed Repository Structure
+
+The repository should follow a clear and consistent structure.
+
+```text
+airplane-crashes-analytics/
+│
+├── data/
+│   ├── raw/
+│   └── samples/
+│
+├── collector/
+│   ├── src/
+│   │   ├── collector.py
+│   │   ├── producer.py
+│   │   └── normalizer.py
+│   └── requirements.txt
+│
+├── kafka/
+│   ├── topics/
+│   └── config/
+│
+├── nifi/
+│   ├── flows/
+│   └── documentation/
+│
+├── spark/
+│   ├── src/
+│   │   ├── streaming.py
+│   │   ├── transformations.py
+│   │   └── analytics.py
+│   └── requirements.txt
+│
+├── database/
+│   ├── schema.sql
+│   └── queries/
+│
+├── dashboard/
+│   ├── app.py
+│   ├── components/
+│   └── requirements.txt
+│
+├── docs/
+│   ├── architecture.md
+│   ├── data-contract.md
+│   ├── database-design.md
+│   └── setup-guide.md
+│
+├── tests/
+│   ├── collector/
+│   ├── spark/
+│   ├── database/
+│   └── integration/
+│
+├── docker/
+│   └── docker-compose.yml
+│
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+This is a proposed structure.
+
+The final directory structure may be adjusted during task planning, but the separation between components should remain clear.
+
+---
+
+# 17. Testing Strategy
+
+Testing must verify both individual components and the complete pipeline.
+
+## 17.1 Component Testing
+
+### Data Collector
+
+Verify:
+
+- Data source connectivity.
+- Successful record retrieval.
+- Correct JSON serialization.
+- Stable identifiers.
+- Kafka publishing.
+
+### Kafka
+
+Verify:
+
+- Topic creation.
+- Message publishing.
+- Message consumption.
+- Correct payload delivery.
+
+### NiFi
+
+Verify:
+
+- Kafka consumption.
+- JSON parsing.
+- Field transformations.
+- Validation.
+- Error routing.
+- Kafka publishing.
+
+### Spark
+
+Verify:
+
+- Kafka connectivity.
+- JSON parsing.
+- Streaming execution.
+- Aggregation correctness.
+- Checkpoint configuration.
+- Database output.
+
+### PostgreSQL
+
+Verify:
+
+- Successful inserts.
+- Correct data types.
+- Duplicate handling.
+- Analytical query correctness.
+
+### Dashboard
+
+Verify:
+
+- Successful database connectivity.
+- Correct metric calculations.
+- Correct chart rendering.
+- Data refresh behavior.
+
+## 17.2 Integration Testing
+
+The most important test is the complete pipeline:
+
+Python Collector
+→ Kafka Raw
+→ NiFi
+→ Kafka Cleaned
+→ Spark
+→ PostgreSQL
+→ Dashboard
+
+The team must verify that a newly published record can travel through all stages successfully.
+
+## 17.3 Analytical Validation
+
+A small manually verified dataset should be used as a reference.
+
+The expected analytical results should be calculated independently and compared with Spark output.
+
+For example:
+
+If a test dataset contains five unique accident records, Spark must return five total accidents after processing all five records.
+
+If one record is published twice, the final logical accident count should remain five when duplicate prevention is enabled.
+
+## 17.4 Final Demonstration Test
+
+The final demonstration must prove:
+
+1. The Producer publishes a new accident record.
+2. Kafka receives the message.
+3. NiFi consumes and transforms the record.
+4. Kafka receives the cleaned message.
+5. Spark processes the message.
+6. PostgreSQL stores the result.
+7. The dashboard reflects the updated information.
+
+This scenario is the primary acceptance test for the project.
+
+---
+
+# 18. Project Management Principles
+
+## 18.1 Team Structure
+
+The team consists of six members.
+
+The work will be organized around the following technical areas:
+
+- Project Management and System Integration.
+- Data Collection.
+- Kafka.
+- NiFi.
+- Spark.
+- Database and Dashboard.
+
+Individual task assignments will be defined in a separate Sprint Planning document.
+
+## 18.2 Development Rules
+
+All team members must follow these rules:
+
+1. No implementation should violate the approved Data Contract.
+2. No member should independently change the shared architecture.
+3. Major interface changes must be communicated to affected members.
+4. Every major component must have a demonstrable result.
+5. Code must be reviewed before integration.
+6. All changes must be committed to the shared repository.
+7. The main integration branch must remain stable.
+8. Documentation must be updated when technical decisions change.
+
+## 18.3 Integration Strategy
+
+Integration must happen continuously.
+
+The team must not wait until the final week to connect all components.
+
+A minimal end-to-end pipeline should be demonstrated as early as possible.
+
+This reduces the risk of discovering major compatibility problems near the deadline.
+
+## 18.4 Knowledge Sharing
+
+Every member must understand:
+
+- The project's overall objective.
+- The complete data pipeline.
+- The role of each technology.
+- The input and output of their assigned component.
+- The most important configuration decisions.
+- The basic failure scenarios.
+
+No code should be submitted without understanding its behavior.
+
+This is particularly important because the project will be discussed and evaluated individually.
+
+---
+
+# 19. Three-Week Delivery Strategy
+
+The project follows three development phases.
+
+## Phase 1: Foundation and Proof of Concept
+
+**Duration:** Week 1
+
+Main objective:
+
+Establish the architecture, prepare the data, configure the technologies, and prove that the main components can communicate.
+
+Expected results:
+
+- Data source selected.
+- Dataset prepared.
+- Data Contract agreed upon.
+- Kafka operational.
+- NiFi connected to Kafka.
+- Spark connected to Kafka.
+- PostgreSQL available.
+- Initial end-to-end proof of concept.
+
+## Phase 2: Core Implementation
+
+**Duration:** Week 2
+
+Main objective:
+
+Implement the main pipeline functionality.
+
+Expected results:
+
+- Working Python Collector.
+- Working Kafka topics.
+- Functional NiFi ETL flow.
+- Functional Spark Structured Streaming job.
+- Core analytical calculations.
+- PostgreSQL integration.
+- Initial functional dashboard.
+
+## Phase 3: Integration and Finalization
+
+**Duration:** Week 3
+
+Main objective:
+
+Validate the complete system, resolve integration issues, and prepare the final demonstration.
+
+Expected results:
+
+- Complete end-to-end pipeline.
+- Correct analytical results.
+- Basic error handling.
+- Duplicate prevention.
+- Integration testing.
+- Final dashboard.
+- Documentation.
+- Presentation and discussion preparation.
+
+The first priority is always completing the mandatory pipeline before introducing additional features.
+
+---
+
+# 20. Acceptance Criteria
+
+The project will be considered functionally complete when the following conditions are satisfied.
+
+| ID | Acceptance Criterion | Priority |
+|---|---|---|
+| AC-01 | The system can retrieve aviation accident records. | Critical |
+| AC-02 | The Python Collector publishes records to Kafka. | Critical |
+| AC-03 | Kafka stores records in the raw topic. | Critical |
+| AC-04 | NiFi successfully consumes raw records. | Critical |
+| AC-05 | NiFi performs meaningful ETL operations. | Critical |
+| AC-06 | NiFi publishes transformed records to Kafka. | Critical |
+| AC-07 | Spark consumes the cleaned Kafka topic. | Critical |
+| AC-08 | Spark Structured Streaming processes incoming records. | Critical |
+| AC-09 | Spark performs the required analytics. | Critical |
+| AC-10 | Processed records are stored in PostgreSQL. | Critical |
+| AC-11 | Analytical results are available in PostgreSQL. | Critical |
+| AC-12 | The dashboard displays the required analytics. | High |
+| AC-13 | Duplicate records do not inflate final accident counts. | High |
+| AC-14 | Invalid records are handled separately. | High |
+| AC-15 | The complete pipeline can be demonstrated successfully. | Critical |
+
+---
+
+# 21. Project Limitations and Assumptions
+
+The team must clearly understand the limitations of the initial implementation.
+
+## 21.1 Data Availability
+
+The system's analytical quality depends on the selected dataset.
+
+The project does not guarantee complete global aviation accident coverage.
+
+## 21.2 Real-Time Limitations
+
+The initial system uses historical records to simulate streaming events.
+
+It does not claim to detect every real-world accident immediately.
+
+## 21.3 Analytical Limitations
+
+Accident counts alone cannot establish the safety level of aircraft models, airlines, airports, or countries.
+
+Accident rates require additional exposure data.
+
+## 21.4 Data Quality
+
+Some accident records may contain missing or incomplete information.
+
+The system must preserve the distinction between unknown information and actual zero values.
+
+## 21.5 Production Readiness
+
+The initial implementation is an academic prototype.
+
+It is not designed to guarantee enterprise-level:
+
+- High availability.
+- Disaster recovery.
+- Security hardening.
+- Horizontal scalability.
+- Continuous deployment.
+- Service-level agreements.
+
+These areas may be addressed in future versions.
+
+---
+
+# 22. Final Engineering Principles
+
+The following principles govern all implementation decisions.
+
+**Principle 1 — Correctness Before Complexity**
+
+A simple, correct pipeline is better than a complex, unreliable one.
+
+**Principle 2 — Data Quality Matters**
+
+Incorrect input data produces incorrect analytical results.
+
+**Principle 3 — Clear Responsibilities**
+
+Each technology must have a defined role.
+
+**Principle 4 — Contract-Based Integration**
+
+Components must communicate using agreed data structures.
+
+**Principle 5 — Early Integration**
+
+Integration must begin during the first development phase.
+
+**Principle 6 — Idempotent Processing**
+
+Repeated processing must not silently create duplicate logical records.
+
+**Principle 7 — Explainable Implementation**
+
+Every team member must understand the technologies and code they use.
+
+**Principle 8 — Scope Discipline**
+
+Optional features must never jeopardize mandatory deliverables.
+
+---
+
+# 23. Final Project Definition
+
+The Real-Time Airplane Crashes Analytics project is an integrated Big Data Streaming application that collects aviation accident records, transports them through Apache Kafka, transforms them using Apache NiFi, processes them through Apache Spark Structured Streaming, stores analytical results in PostgreSQL, and presents insights through an interactive Streamlit dashboard.
+
+The project focuses on demonstrating a complete and functional data engineering pipeline, together with meaningful analytical operations.
+
+The initial implementation prioritizes correctness, integration, data quality, and demonstrable functionality within the available three-week development period.
+
+**This document is the primary technical reference for the project. All implementation activities must follow its approved scope, architecture, data contracts, and engineering principles.**
