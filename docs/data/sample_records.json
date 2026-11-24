@@ -1,0 +1,1067 @@
+[
+    {
+        "Event ID": "20261029204088",
+        "Accident Date": "2026-10-28 00:00:00",
+        "Accident Time": null,
+        "City": "Puerto Ayacucho",
+        "State": "OF",
+        "Country": "VE",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "FATL",
+        "Fatal Injuries": 1,
+        "Serious Injuries": 0,
+        "Minor Injuries": 2,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "CESSNA",
+                "Aircraft Model": "U206"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "MINR",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "FATL",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "MINR",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261026204070",
+        "Accident Date": "2026-10-26 00:00:00",
+        "Accident Time": 100,
+        "City": "North Cat Cay",
+        "State": "OF",
+        "Country": "BS",
+        "Latitude": "025333N",
+        "Longitude": "0791620W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "TECNAM",
+                "Aircraft Model": "P-Mentor "
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261026204067",
+        "Accident Date": "2026-10-25 00:00:00",
+        "Accident Time": 33,
+        "City": "Canton",
+        "State": "OH",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "MINR",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 2,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "DOUGLAS A KUPERSMITH",
+                "Aircraft Model": "ZENITH CH650B"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "MINR",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            }
+        ]
+    },
+    {
+        "Event ID": "20261026204074",
+        "Accident Date": "2026-10-25 00:00:00",
+        "Accident Time": 1420,
+        "City": "Birmingham",
+        "State": "OF",
+        "Country": "GB",
+        "Latitude": "522714N",
+        "Longitude": "0014454W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "BOEING",
+                "Aircraft Model": "737"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 4
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 161
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261027204078",
+        "Accident Date": "2026-10-24 00:00:00",
+        "Accident Time": 2125,
+        "City": "Death Valley",
+        "State": "CA",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "MINR",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 1,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "CESSNA",
+                "Aircraft Model": "120"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "MINR",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261028204083",
+        "Accident Date": "2026-10-24 00:00:00",
+        "Accident Time": 645,
+        "City": "Rome",
+        "State": "OF",
+        "Country": "IT",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "GULFSTREAM AEROSPACE CORP",
+                "Aircraft Model": "GVIII-G700"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 4
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 5
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261026204075",
+        "Accident Date": "2026-10-23 00:00:00",
+        "Accident Time": 630,
+        "City": "Luxembourg",
+        "State": "OF",
+        "Country": "LU",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "BOEING",
+                "Aircraft Model": "747"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261023204063",
+        "Accident Date": "2026-10-23 00:00:00",
+        "Accident Time": 1330,
+        "City": "Medford",
+        "State": "NJ",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "SERS",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 1,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "PIPER",
+                "Aircraft Model": "PA-28-181"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "SERS",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261027204079",
+        "Accident Date": "2026-10-22 00:00:00",
+        "Accident Time": 900,
+        "City": "Reno",
+        "State": "NV",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "SEAWIND",
+                "Aircraft Model": "SEAWIND"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261027204077",
+        "Accident Date": "2026-10-22 00:00:00",
+        "Accident Time": 2150,
+        "City": "Waynesville",
+        "State": "OH",
+        "Country": "USA",
+        "Latitude": "393021N",
+        "Longitude": "0084716W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "AERONCA",
+                "Aircraft Model": "7AC"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261022204057",
+        "Accident Date": "2026-10-22 00:00:00",
+        "Accident Time": 800,
+        "City": "Belle Plaine",
+        "State": "IA",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "RUDOLPH GARY",
+                "Aircraft Model": "LEGACY"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261023204058",
+        "Accident Date": "2026-10-22 00:00:00",
+        "Accident Time": 1644,
+        "City": "Nacogdoches",
+        "State": "TX",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "CESSNA",
+                "Aircraft Model": "P206"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261023204059",
+        "Accident Date": "2026-10-22 00:00:00",
+        "Accident Time": 2010,
+        "City": "Claremore",
+        "State": "OK",
+        "Country": "USA",
+        "Latitude": "361655N",
+        "Longitude": "0952628W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "PIPER",
+                "Aircraft Model": "PA-28"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261029204087",
+        "Accident Date": "2026-10-21 00:00:00",
+        "Accident Time": 1730,
+        "City": "Ball Ground",
+        "State": "GA",
+        "Country": "USA",
+        "Latitude": "341844N",
+        "Longitude": "0842520W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "CESSNA",
+                "Aircraft Model": "182Q"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261022204056",
+        "Accident Date": "2026-10-21 00:00:00",
+        "Accident Time": 1227,
+        "City": "Pacific Ocean",
+        "State": "PO",
+        "Country": "USA",
+        "Latitude": "333220N",
+        "Longitude": "1192335W",
+        "Event Injury Severity": "SERS",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 1,
+        "Minor Injuries": 3,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "BOEING",
+                "Aircraft Model": "777-222"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "SERS",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "MINR",
+                "Person Count": 3
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 4
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 193
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261026204072",
+        "Accident Date": "2026-10-21 00:00:00",
+        "Accident Time": 2340,
+        "City": "Cliza",
+        "State": "OF",
+        "Country": "BO",
+        "Latitude": "173614S",
+        "Longitude": "0655711W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "BOEING",
+                "Aircraft Model": "737"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 4
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 2
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261022204054",
+        "Accident Date": "2026-10-21 00:00:00",
+        "Accident Time": 1522,
+        "City": "Alpine",
+        "State": "WY",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "HONDA AIRCRAFT CO LLC",
+                "Aircraft Model": "HA-420"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261020204038",
+        "Accident Date": "2026-10-20 00:00:00",
+        "Accident Time": 44,
+        "City": "Kinnelon",
+        "State": "NJ",
+        "Country": "USA",
+        "Latitude": null,
+        "Longitude": null,
+        "Event Injury Severity": "MINR",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 1,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "ROBINSON HELICOPTER",
+                "Aircraft Model": "R44"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "MINR",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            }
+        ]
+    },
+    {
+        "Event ID": "20261020204031",
+        "Accident Date": "2026-10-19 00:00:00",
+        "Accident Time": 2244,
+        "City": "Galveston",
+        "State": "TX",
+        "Country": "USA",
+        "Latitude": "291622N",
+        "Longitude": "0094528W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "CESSNA",
+                "Aircraft Model": "182A"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": null
+            }
+        ]
+    },
+    {
+        "Event ID": "20261021204050",
+        "Accident Date": "2026-10-19 00:00:00",
+        "Accident Time": 1808,
+        "City": "Bridgeton",
+        "State": "MO",
+        "Country": "USA",
+        "Latitude": "038459N",
+        "Longitude": "0902227W",
+        "Event Injury Severity": "NONE",
+        "Fatal Injuries": 0,
+        "Serious Injuries": 0,
+        "Minor Injuries": 0,
+        "Aircraft": [
+            {
+                "Aircraft Key": 1,
+                "Aircraft Make": "EUROCOPTER DEUTSCHLAND GMBH",
+                "Aircraft Model": "EC 135 P2"
+            }
+        ],
+        "Injury Records": [
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Cabi",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "NONE",
+                "Person Count": 1
+            },
+            {
+                "Person Category": "Flig",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "LapC",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "FATL",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "SERS",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "MINR",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "NONE",
+                "Person Count": 0
+            },
+            {
+                "Person Category": "Pass",
+                "Injury Level": "TOTL",
+                "Person Count": 0
+            }
+        ]
+    }
+]

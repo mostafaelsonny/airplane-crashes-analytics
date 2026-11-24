@@ -26,7 +26,7 @@ This data dictionary documents the fields selected for the NTSB aviation acciden
 | Field Name | Data Type | Description | Missing Count | Missing % | Requirement |
 |---|---|---|---:|---:|---|
 | ev_id | VARCHAR (14) | Identifier linking aircraft records to an event | 0 | 0.00% | Required |
-| Aircraft_Key | Verify from schema | Aircraft record key | 0 | 0.00% | Required |
+| Aircraft_Key | INTEGER | Aircraft record key | 0 | 0.00% | Required |
 | acft_make | VARCHAR (30) | Aircraft manufacturer or make | 42 | 0.13% | Optional |
 | acft_model | VARCHAR (20) | Aircraft model | 53 | 0.17% | Optional |
 
@@ -35,9 +35,9 @@ This data dictionary documents the fields selected for the NTSB aviation acciden
 | Field Name | Data Type | Description | Missing Count | Missing % | Requirement |
 |---|---|---|---:|---:|---|
 | ev_id | VARCHAR (14) | Identifier linking injury records to an event | 0 | 0.00% | Required |
-| inj_person_category | Verify from schema | Category of the person associated with the injury record | 0 | 0.00% | Required for injury analysis |
+| inj_person_category | VARCHAR(4) | Category of the person associated with the injury record | 0 | 0.00% | Required for injury analysis |
 | injury_level | VARCHAR (4) | Severity level of the reported injury | 0 | 0.00% | Required for injury analysis |
-| inj_person_count | Verify from schema | Number of persons represented by the injury record | 23,246 | 12.73% | Optional |
+| inj_person_count | SMALLINT | Number of persons represented by the injury record | 23,246 | 12.73% | Optional |
 
 ## 5. Missing-Value Notes
 
@@ -52,7 +52,7 @@ Missing values should be investigated before using these fields in analysis. Mis
 
 ## 6. Data Type Verification
 
-Data types listed above were taken from the schema information available during field matching. Data types marked "Verify from schema" require confirmation from the complete schema inspection report.
+Data types were verified using the schema inspection results extracted from the original NTSB Access database (avall.mdb). The data types are documented according to the source database schema.
 
 ## 7. Requirement Classification
 

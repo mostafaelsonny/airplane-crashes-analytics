@@ -95,3 +95,13 @@ Sample file: `sample_records.json`
 - High injury counts were flagged for review and are not automatically classified as errors.
 - The relationship between tables was explored using the event identifier (`ev_id`); formal database foreign-key constraints still need confirmation.
 - The extracted sample contains 20 events with associated aircraft and injury records.
+
+## 9. Data Mapping & Transformations
+
+The following transformations are planned to prepare the source data for downstream processing:
+
+- **Accident Time (`ev_time`):** The source field is stored as `SMALLINT` and represents time in HHMM format. It will be converted into `HH:MM:SS` format. For example, `1430` will be converted to `14:30:00`. Missing or invalid time values will be handled as NULL.
+
+- **Latitude and Longitude:** The source `latitude` and `longitude` fields are stored as `VARCHAR` and may contain coordinate values in different formats. They will be parsed and converted into decimal numeric values (Float/Double) after validation. Invalid or unparseable coordinates will be handled as NULL to prevent downstream processing errors in NiFi or Spark.
+
+- **Multiple Aircraft per Event:** Some events may be associated with more than one aircraft. For Sprint 1, using `Aircraft_Key = 1` as the primary aircraft is a proposed simplification, pending team approval.
